@@ -45,3 +45,51 @@
 
     var_dump(is_Even(squarer(12)));
     var_dump(is_Even(squarer(7)));
+
+//Part 2 - Scope of variables
+    $age = 0;
+
+    function thefun() {
+        // global $age;
+        // $age = 12;        
+        // echo "<p>$age</p>";
+    //OR
+        $GLOBALS['age'] = 12;        
+        echo "<p>" . $GLOBALS['age'] . "</p>";
+    }
+    thefun();
+    echo "<p>$age</p>";
+
+    
+    $a = 10;
+    $b = 20;
+
+    echo "<pre>";
+    print_r($GLOBALS);
+    echo "</pre>";
+
+    echo "<p>Outside-Before : $a,$b</p>";
+    
+    function swap(&$x,&$y) {
+        echo "<p>Inside-Before : $x,$y</p>";
+        $z = $x;
+        $x = $y;
+        $y = $z;
+        echo "<p>Inside-After : $x,$y</p>";
+    }
+    
+    swap($a,$b);
+    echo "<p>Outside-After : $a,$b</p>";
+
+    function counter() {
+        static $cnt = 0;
+        $cnt++;
+
+        echo "<p>$cnt</p>";
+    }
+
+    counter();
+    counter();
+    counter();
+    counter();
+    counter();
