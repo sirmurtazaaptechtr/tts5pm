@@ -7,21 +7,29 @@
         $input = stripslashes($input);
         $input = htmlspecialchars($input);
         return $input;
-    }
-    
+    }    
     if(isset($_POST['submit'])) {
         if(empty($_POST['fullname'])) {
-            $nameerror = "Name is required";
+            $nameerror = "name is required";
         }else {
             $name = safe_input($_POST['fullname']);
+            if(!preg_match("/^[a-zA-Z-' ]*$/",$name)){
+                $nameerror = "Only letters and white space are allowed";
+            }
         }
 
         if(empty($_POST['email'])) {
             $emailerror = "email is required";
         }else {
             $email = safe_input($_POST['email']);
+            if(!preg_match('/^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/',$email)){
+                $emailerror = "Invalid email format";
+            }
         }
         $website = safe_input($_POST['website']);
+        if(!preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i",$website)){
+            $websiteerror = "Invalid URL";
+        }
         $comment = safe_input($_POST['comment']);
         if(empty($_POST['gender'])) {
             $gendererror = "select gender";
@@ -57,16 +65,17 @@
         <br><br>
         <label for="website"><b>Website:</b></label>
         <input type="url" name="website" id="website" value="<?php echo htmlspecialchars($website); ?>">
+        <span class="red" id="websitespan"><?php echo $websiteerror; ?></span>
         <br><br>
         <label for="comment"><b>Comment:</b></label>
         <textarea name="comment" id="comment" cols="30" rows="10"><?php echo htmlspecialchars($comment); ?></textarea>
         <br><br>
         <label><b>Gender:</b></label>
-        <input type="radio" name="gender" id="female" value="F">
+        <input type="radio" name="gender" id="female" value="female" <?php if($gender === 'female') {echo 'checked';}?>>
         <label for="female">Female</label>
-        <input type="radio" name="gender" id="male" value="M">
+        <input type="radio" name="gender" id="male" value="male" <?php if($gender === 'male') {echo 'checked';}?>>
         <label for="male">Male</label>
-        <input type="radio" name="gender" id="other" value="O">
+        <input type="radio" name="gender" id="other" value="other" <?php if($gender === 'other') {echo 'checked';}?>>
         <label for="other">Other</label>
         <span class="red" id="genderspan">* <?php echo $gendererror; ?></span>
         <br><br>
@@ -74,7 +83,7 @@
     </form>
     <h2>Your Input</h2>
     <?php
-        if($name != "" && $email != "" && $website != "" && $comment != "" && $gender != "") {
+        if($nameerror == "" && $emailerror == "" && $websiteerror == "" && $gendererror == "") {
             echo 
             "<ul>
                 <li>Name : $name</li>
