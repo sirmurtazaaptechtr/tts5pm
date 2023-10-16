@@ -1,0 +1,61 @@
+Hospital ERD for Scenario
+
+Patient (1) --(attends)--> (N) Appointment
+Doctor (1) --(performs)--> (N) Appointment
+Nurse (1) --(works in)--> (N) Department
+Ward (1) --(belongs to)--> (1) Department
+Patient (1) --(is admitted to)--> (N) Ward
+Doctor (1) --(writes)--> (N) Prescription
+Patient (1) --(receives)--> (N) Prescription
+This ERD represents a hospital scenario where patients can have appointments with doctors, nurses work in departments, wards belong to departments, patients can be admitted to wards, and doctors can write prescriptions for patients. This is a basic model and can be expanded upon to include more details and features as needed.
+User
+Make er diagram of hospital and senario
+
+Save & Submit
+
+Entities:
+
+Patient
+PatientID (Primary Key)
+Name
+DateOfBirth
+Gender
+ContactInfo
+
+Doctor
+DoctorID (Primary Key)
+Name
+Specialization
+ContactInfo
+
+Nurse
+NurseID (Primary Key)
+Name
+Department
+ContactInfo
+
+Appointment
+AppointmentID (Primary Key)
+Date
+Time
+PatientID (Foreign Key)
+DoctorID (Foreign Key)
+
+Department
+DepartmentID (Primary Key)
+Name
+Location
+Ward
+
+WardID (Primary Key)
+WardNumber
+DepartmentID (Foreign Key)
+Prescription
+
+PrescriptionID (Primary Key)
+Date
+Medication
+Dosage
+DoctorID (Foreign Key)
+PatientID (Foreign Key)
+Relationships:
