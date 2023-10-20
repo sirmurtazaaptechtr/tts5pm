@@ -1,17 +1,17 @@
 <?php
     include('header.inc.php');    
-    $showcities_sql = "SELECT * FROM `cities`";
-    $rows = mysqli_query($conn,$showcities_sql);    
+    $showstudents_sql = "SELECT * FROM `teachers` JOIN `cities` ON teachers.city_id = cities.id";
+    $rows = mysqli_query($conn,$showstudents_sql);    
 ?>
 
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>List of Cities</h1>
+      <h1>List of Teachers</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-          <li class="breadcrumb-item active">Cities</li>
+          <li class="breadcrumb-item active">Teachers</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -22,31 +22,33 @@
 
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">All Cities</h5>             
+              <h5 class="card-title">All Teachers</h5>             
 
               <!-- Table with stripped rows -->
               <table class="table datatable">
                 <thead>
                   <tr>
                     <th scope="col">#</th>
-                    <th scope="col">City ID</th>
-                    <th scope="col">City Name</th>
-                    <th scope="col">Longitude</th>
-                    <th scope="col">Latitude</th>
+                    <th scope="col">Teacher ID</th>
+                    <th scope="col">Teacher Name</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">City</th>
                   </tr>
                 </thead>
                 <tbody>
                     <?php
                         $srno = 1;
-                        foreach($rows as $city)
+                        foreach($rows as $teacher)
                         {
                     ?>
                     <tr>
                         <th scope="row"><?php echo $srno; ?></th>
-                        <td><?php echo $city['id']; ?></td>
-                        <td><?php echo $city['city_name']; ?></td>
-                        <td><?php echo $city['lng']; ?></td>
-                        <td><?php echo $city['lat']; ?></td>
+                        <td><?php echo $teacher['id']; ?></td>
+                        <td><?php echo $teacher['name']; ?></td>
+                        <td><?php echo $teacher['age']; ?></td>
+                        <td><?php echo $teacher['email']; ?></td>
+                        <td><?php echo $teacher['city_name']; ?></td>
                     </tr>                  
                     <?php
                         $srno++;
