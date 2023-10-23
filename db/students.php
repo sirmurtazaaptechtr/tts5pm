@@ -1,6 +1,6 @@
 <?php
     include('header.inc.php');    
-    $showstudents_sql = "SELECT * FROM `students` JOIN `cities` ON students.city_id = cities.id";
+    $showstudents_sql = "SELECT * FROM `users` JOIN `cities` ON users.city_id = cities.id WHERE users.type = 'student'";
     $rows = mysqli_query($conn,$showstudents_sql);    
 ?>
 

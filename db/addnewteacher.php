@@ -1,10 +1,10 @@
 <?php
 include('header.inc.php');
 // define variables and set to empty values
-$nameErr = $emailErr = $genderErr = $websiteErr = "";
-$name = $email = $gender = $comment = $website = "";
+$nameErr = $emailErr = $ageErr = $city_idErr = "";
+$name = $email = $age = $city_id = "";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {  
   if (empty($_POST["name"])) {
     $nameErr = "Name is required";
   } else {
@@ -23,38 +23,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
       $emailErr = "Invalid email format";
     }
-  }
-    
-  if (empty($_POST["website"])) {
-    $website = "";
-  } else {
-    $website = test_input($_POST["website"]);
-    // check if URL address syntax is valid (this regular expression also allows dashes in the URL)
-    if (!preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i",$website)) {
-      $websiteErr = "Invalid URL";
-    }
-  }
+  }  
 
-  if (empty($_POST["comment"])) {
-    $comment = "";
-  } else {
-    $comment = test_input($_POST["comment"]);
-  }
+  if (empty($_POST["age"])) {
+    $ageErr = "Age is required";
+  } else if($_POST["age"] < 1) {
+    $ageErr = "Age must be Positive Number";
+  } else{
+      $age = test_input($_POST["age"]);      
+  }    
+  
 
-  if (empty($_POST["gender"])) {
-    $genderErr = "Gender is required";
-  } else {
-    $gender = test_input($_POST["gender"]);
+  if (empty($_POST["city_id"]) || $_POST["city_id"] < 1) {
+    $city_idErr = "Select a City";
+  } else {    
+    $city_id = test_input($_POST["city_id"]);
+  }  
+}
+if(isset($_POST['submit'])) {
+  if(empty($nameErr) && empty($emailErr) && empty($ageErr) && empty($city_idErr)) {
+      $addstudent_sql = "INSERT INTO `users` (name, email, age, city_id, type) VALUES ('$name', '$email', '$age', '$city_id','teacher')";
+      if (mysqli_query($conn, $addstudent_sql)) {
+        //   echo "New record created successfully";
+          header('Location: teachers.php');
+          exit;            
+        } else {
+          echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+        }
   }
 }
-
-function test_input($data) {
-  $data = trim($data);
-  $data = stripslashes($data);
-  $data = htmlspecialchars($data);
-  return $data;
-}
-
 ?>
 <main id="main" class="main">
 
@@ -103,7 +100,7 @@ function test_input($data) {
             <div class="row mb-3">
               <label class="col-sm-2 col-form-label">City</label>
               <div class="col-sm-5">
-                <select class="form-select" aria-label="Default select example">
+                <select class="form-select" name="city_id" id="city_id" aria-label="Default select example">
                   <option selected>Select a City</option>
                   <?php
                   $showcities_sql = "SELECT * FROM `cities`";
@@ -121,14 +118,13 @@ function test_input($data) {
             <div class="row mb-3">
               <label class="col-sm-2 col-form-label">Submit Button</label>
               <div class="col-sm-5">
-                <button type="reset" class="btn btn-danger">Clear</button>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="reset" name="reset" id="reset" class="btn btn-danger">Clear</button>
+                <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
               </div>
             </div>
           </form><!-- End Add New City -->
         </div>
       </div>
-
     </div>   
   </div>
 </section>

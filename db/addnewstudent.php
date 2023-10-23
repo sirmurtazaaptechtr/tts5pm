@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 if(isset($_POST['submit'])) {
   if(empty($nameErr) && empty($emailErr) && empty($ageErr) && empty($city_idErr)) {
-      $addstudent_sql = "INSERT INTO `students` (name, email, age, city_id) VALUES ('$name', '$email', '$age', '$city_id')";
+      $addstudent_sql = "INSERT INTO `users` (name, email, age, city_id,type) VALUES ('$name', '$email', '$age', '$city_id','student')";
       if (mysqli_query($conn, $addstudent_sql)) {
         //   echo "New record created successfully";
           header('Location: students.php');
