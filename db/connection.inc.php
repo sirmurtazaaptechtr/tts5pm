@@ -1,5 +1,7 @@
 <!-- MySQLi Procedural -->
 <?php
+    session_start();
+    
     $hostname = "localhost";
     $username = "root";
     $password = "";

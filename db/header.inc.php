@@ -1,6 +1,9 @@
 <?php
   ob_start();
   require('connection.inc.php');
+  if(!isset($_SESSION['admin_login']) || $_SESSION['admin_login'] != true) {
+    header('Location: index.php');
+  } 
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -259,7 +262,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
+              <a class="dropdown-item d-flex align-items-center" href="logout.php">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>
@@ -421,6 +424,13 @@
           <span>Login</span>
         </a>
       </li><!-- End Login Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="logout.php">
+          <i class="bi bi-box-arrow-in-left"></i>
+          <span>Logout</span>
+        </a>
+      </li><!-- End Logout Page Nav -->
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="pages-error-404.html">

@@ -1,5 +1,5 @@
 <?php
-    include('header.inc.php');         
+    include('header.inc.php');             
 ?>
 <main id="main" class="main">
     <h1>MENU</h1>

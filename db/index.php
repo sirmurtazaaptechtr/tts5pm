@@ -24,6 +24,10 @@
             if($username == $login['username'] && $password == $login['password']) {
                 $login_flag = true;
                 $role_id = $login['role_id'];
+                $_SESSION['admin_login'] = true;
+                $_SESSION['admin_name'] = $login['name'];
+                $_SESSION['admin_email'] = $login['email'];
+                $_SESSION['admin_username'] = $login['username'];
                 break;                
             }
         }
