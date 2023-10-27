@@ -28,6 +28,7 @@
                 $_SESSION['admin_name'] = $login['name'];
                 $_SESSION['admin_email'] = $login['email'];
                 $_SESSION['admin_username'] = $login['username'];
+                $_SESSION['admin_type'] = $login['type'];
                 break;                
             }
         }

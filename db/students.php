@@ -1,7 +1,17 @@
 <?php
     include('header.inc.php');    
-    $showstudents_sql = "SELECT * FROM `users` JOIN `cities` ON users.city_id = cities.id WHERE users.type = 'student'";
-    $rows = mysqli_query($conn,$showstudents_sql);    
+    $showstudents_sql = "SELECT *,users.id as userid FROM `users` LEFT JOIN `cities` ON users.city_id = cities.id WHERE users.type = 'student'";
+    $rows = mysqli_query($conn,$showstudents_sql);
+
+    if(isset($_GET['id']) && $_GET['action'] == 'delete') {
+      $user_id = $_GET['id'];
+      $deletestudent_sql = "DELETE FROM `users` where id = $user_id";
+      $isDeleted = mysqli_query($conn,$deletestudent_sql);
+      if($isDeleted) {
+        header('Location: students.php');
+        exit;
+      }
+    }    
 ?>
 
   <main id="main" class="main">
@@ -34,6 +44,7 @@
                     <th scope="col">Age</th>
                     <th scope="col">Email</th>
                     <th scope="col">City</th>
+                    <th scope="col">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -44,11 +55,17 @@
                     ?>
                     <tr>
                         <th scope="row"><?php echo $srno; ?></th>
-                        <td><?php echo $student['id']; ?></td>
+                        <td><?php echo $student['userid']; ?></td>
                         <td><?php echo $student['name']; ?></td>
                         <td><?php echo $student['age']; ?></td>
                         <td><?php echo $student['email']; ?></td>
                         <td><?php echo $student['city_name']; ?></td>
+                        <td>
+                          <div class="btn-group" role="group" aria-label="Action buttons">
+                            <a type="button" class="btn btn-warning btn-sm" href="<?php echo 'editstudent.php?id='.$student['userid']; ?>" >Edit</a>
+                            <a type="button" class="btn btn-danger btn-sm" href="<?php echo '?id='.$student['userid'].'&action=delete'; ?>" >Delete</a>
+                          </div>
+                        </td>
                     </tr>                  
                     <?php
                         $srno++;
