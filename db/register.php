@@ -44,71 +44,121 @@
 <body>
     <?php
     // define variables and set to empty values
-    $nameErr = $emailErr = $ageErr = $city_idErr = "";
-    $username = $password = $usertype = $role_id = $name = $email = $age = $city_id = "";
+    $uploadErr = $nameErr = $emailErr = $ageErr = $city_idErr = "";
+    $target_file = $username = $password = $usertype = $role_id = $name = $email = $age = $city_id =
+        "";
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {  
-    
-    $usertype = test_input($_POST["usertype"]);
-    $username = test_input($_POST["username"]);
-    $password = mysqli_real_escape_string($conn, $_POST["password"]);
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $target_dir = "assets/img/users/";
+        $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-    if (empty($_POST["name"])) {
-        $nameErr = "Name is required";
-    } else {
-        $name = test_input($_POST["name"]);
-        // check if name only contains letters and whitespace
-        if (!preg_match("/^[a-zA-Z-' ]*$/",$name)) {
-        $nameErr = "Only letters and white space allowed";
+        // Check if image file is a actual image or fake image
+        $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+        if ($check !== false) {
+            echo "File is an image - " . $check["mime"] . ".";
+        } else {
+            $uploadErr = "File is not an image.";
+        }
+
+        // Check if file already exists
+        if (file_exists($target_file)) {
+            $uploadErr = "Sorry, file already exists.";
+        }
+
+        // Check file size
+        if ($_FILES["fileToUpload"]["size"] > 500000) {
+            $uploadErr = "Sorry, your file is too large.";
+        }
+
+        // Allow certain file formats
+        if (
+            $imageFileType != "jpg" &&
+            $imageFileType != "png" &&
+            $imageFileType != "jpeg" &&
+            $imageFileType != "gif"
+        ) {
+            $uploadErr = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+        }
+
+        $usertype = test_input($_POST["usertype"]);
+        $username = test_input($_POST["username"]);
+        $password = mysqli_real_escape_string($conn, $_POST["password"]);
+
+        if (empty($_POST["name"])) {
+            $nameErr = "Name is required";
+        } else {
+            $name = test_input($_POST["name"]);
+            // check if name only contains letters and whitespace
+            if (!preg_match("/^[a-zA-Z-' ]*$/", $name)) {
+                $nameErr = "Only letters and white space allowed";
+            }
+        }
+
+        if (empty($_POST["email"])) {
+            $emailErr = "Email is required";
+        } else {
+            $email = test_input($_POST["email"]);
+            // check if e-mail address is well-formed
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $emailErr = "Invalid email format";
+            }
+        }
+        if (empty($_POST["age"])) {
+            $ageErr = "Age is required";
+        } elseif ($_POST["age"] < 1) {
+            $ageErr = "Age must be Positive Number";
+        } else {
+            $age = test_input($_POST["age"]);
+        }
+        if (empty($_POST["city_id"]) || $_POST["city_id"] < 1) {
+            $city_idErr = "Invalid City";
+        } else {
+            $city_id = test_input($_POST["city_id"]);
         }
     }
-    
-    if (empty($_POST["email"])) {
-        $emailErr = "Email is required";
-    } else {
-        $email = test_input($_POST["email"]);
-        // check if e-mail address is well-formed
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $emailErr = "Invalid email format";
+    if (isset($_POST["submit"])) {
+        if (!empty($uploadErr)) {
+            $uploadErr = "Sorry, your file was not uploaded.";
+            // if everything is ok, try to upload file
+        } elseif (
+            move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)
+        ) {
+            echo "The file " .
+                htmlspecialchars(basename($_FILES["fileToUpload"]["name"])) .
+                " has been uploaded.";
+        } else {
+            $uploadErr = "Sorry, there was an error uploading your file.";
         }
-    }
-    if (empty($_POST["age"])) {
-        $ageErr = "Age is required";
-    } else if($_POST["age"] < 1) {
-        $ageErr = "Age must be Positive Number";
-    } else{
-            $age = test_input($_POST["age"]);      
-    }
-    if (empty($_POST["city_id"]) || $_POST["city_id"] < 1) {
-        $city_idErr = "Invalid City";
-    } else {    
-        $city_id = test_input($_POST["city_id"]);
-    }  
-    }
-    if(isset($_POST['submit'])) {
-    if(empty($nameErr) && empty($emailErr) && empty($ageErr) && empty($city_idErr)) {
-        // prx($_POST);
-        if ($usertype == 'student')
-            $role_id = 3;            
-        }else {
+        if (
+            empty($uploadErr) &&
+            empty($nameErr) &&
+            empty($emailErr) &&
+            empty($ageErr) &&
+            empty($city_idErr)
+        ) {
+            // prx($_POST);
+            if ($usertype == "student") {
+                $role_id = 3;
+            }
+        } else {
             $role_id = 2;
         }
-        $regstudent_sql = "INSERT INTO `users` (name, email, age, city_id, type) VALUES ('$name', '$email', '$age', '$city_id','$usertype')";
+        $regstudent_sql = "INSERT INTO `users` (name, email, age, city_id, type, image) VALUES ('$name', '$email', '$age', '$city_id','$usertype','$target_file')";
         if (mysqli_query($conn, $regstudent_sql)) {
             // Get the last inserted ID
             $lastInsertedID = mysqli_insert_id($conn);
             $reglogin_sql = "INSERT INTO `login` (username,password,user_id,role_id) VALUES ('$username','$password','$lastInsertedID','$role_id')";
-            if(mysqli_query($conn, $reglogin_sql)) {
+            if (mysqli_query($conn, $reglogin_sql)) {
                 //   echo "New record created successfully";
-                header('Location: index.php');
-                exit;
+                header("Location: index.php");
+                exit();
             } else {
                 echo "Error: " . $sql . "<br>" . mysqli_error($conn);
             }
         }
     }
     ?>
-
     <main>
         <div class="container">
 
@@ -133,7 +183,12 @@
                                         <h5 class="card-title text-center pb-0 fs-4">Create an Account</h5>
                                         <p class="text-center small">Enter your personal details to create account</p>
                                     </div>
-                                    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" class="row g-3 needs-validation" novalidate>
+                                    <form method="post" enctype="multipart/form-data" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" class="row g-3 needs-validation" novalidate>
+                                    <div class="col-12">
+                                    <label class="form-label">Your Image</label>
+                                    <input type="file" id="fileToUpload" name="fileToUpload" class="form-control" aria-label="User Image" required>
+                                    <div class="invalid-feedback">No File Selected!</div>
+                                    </div>
                                     <div class="col-12">
                                             <fieldset class="row mb-3">
                                                 <label class="form-label">User Type</label>
