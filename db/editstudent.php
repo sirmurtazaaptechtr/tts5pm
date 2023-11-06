@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (!empty($_POST['fileToUpload'])) {
+    if (!empty($_FILES['fileToUpload'])) {        
         $target_dir = "assets/img/users/";
         $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
         $uploadOk = true;
