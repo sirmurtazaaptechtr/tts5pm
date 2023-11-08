@@ -140,23 +140,23 @@
             // prx($_POST);
             if ($usertype == "student") {
                 $role_id = 3;
+            }else {
+                $role_id = 2;
             }
-        } else {
-            $role_id = 2;
-        }
-        $regstudent_sql = "INSERT INTO `users` (name, email, age, city_id, type, image) VALUES ('$name', '$email', '$age', '$city_id','$usertype','$target_file')";
-        if (mysqli_query($conn, $regstudent_sql)) {
-            // Get the last inserted ID
-            $lastInsertedID = mysqli_insert_id($conn);
-            $reglogin_sql = "INSERT INTO `login` (username,password,user_id,role_id) VALUES ('$username','$password','$lastInsertedID','$role_id')";
-            if (mysqli_query($conn, $reglogin_sql)) {
-                //   echo "New record created successfully";
-                header("Location: index.php");
-                exit();
-            } else {
-                echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+            $regstudent_sql = "INSERT INTO `users` (name, email, age, city_id, type, image) VALUES ('$name', '$email', '$age', '$city_id','$usertype','$target_file')";
+            if (mysqli_query($conn, $regstudent_sql)) {
+                // Get the last inserted ID
+                $lastInsertedID = mysqli_insert_id($conn);            
+                $reglogin_sql = "INSERT INTO `login` (username,password,user_id,role_id) VALUES ('$username','$password','$lastInsertedID','$role_id')";
+                if (mysqli_query($conn, $reglogin_sql)) {
+                    //   echo "New record created successfully";
+                    header("Location: index.php");
+                    exit();
+                } else {
+                    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+                }
             }
-        }
+        } 
     }
     ?>
     <main>
