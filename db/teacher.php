@@ -1,4 +1,8 @@
 <?php include('include/header.php'); ?>
+<?php 
+    $showteachers_sql = "SELECT * from users where type = 'teacher'";
+    $teachers = mysqli_query($conn,$showteachers_sql);
+?>
 <section class="hero-wrap hero-wrap-2" style="background-image: url('images/bg_2.jpg');">
     <div class="overlay"></div>
     <div class="container">
@@ -10,20 +14,20 @@
         </div>
     </div>
 </section>
-
 <section class="ftco-section ftco-no-pb">
     <div class="container">
         <div class="row">
+            <?php foreach($teachers as $teacher) { ?>
             <div class="col-md-6 col-lg-3 ftco-animate">
                 <div class="staff">
                     <div class="img-wrap d-flex align-items-stretch">
-                        <div class="img align-self-stretch" style="background-image: url(images/teacher-1.jpg);"></div>
+                        <div class="img align-self-stretch" style="background-image: url(<?php echo 'admin/'.$teacher['image']; ?>);"></div>
                     </div>
                     <div class="text pt-3 text-center">
-                        <h3>Bianca Wilson</h3>
+                        <h3><?php echo $teacher['name']; ?></h3>
                         <span class="position mb-2">Teacher</span>
                         <div class="faded">
-                            <p>I am an ambitious workaholic, but apart from that, pretty simple person.</p>
+                            <p><?php echo $teacher['email']; ?></p>
                             <ul class="ftco-social text-center">
                                 <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
                                 <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
@@ -34,7 +38,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3 ftco-animate">
+            <?php } ?>
+            <!-- <div class="col-md-6 col-lg-3 ftco-animate">
                 <div class="staff">
                     <div class="img-wrap d-flex align-items-stretch">
                         <div class="img align-self-stretch" style="background-image: url(images/teacher-2.jpg);"></div>
@@ -173,7 +178,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </section>
