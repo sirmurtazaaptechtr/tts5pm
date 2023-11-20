@@ -17,4 +17,9 @@
     $emp3->set_dob("04-Feb-2005");
     //$emp3->set_salary(85000);
     echo $emp3->disp_info();
+
+    $emp4 = new Employee(4,"Ali Raza");
+    $emp4->set_dob("03-July-1983");
+    $emp4->set_gender("Male");
+    echo $emp4->disp_info();
 ?>
