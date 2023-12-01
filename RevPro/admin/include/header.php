@@ -1,6 +1,14 @@
 <?php 
 ob_start();
 require('connection.php');
+$FullName = $Email = $Role = "";
+$sql = "SELECT * FROM `users` JOIN `roles` ON `users`.`roleid` = `roles`.`id` WHERE `users`.`id` = 1";
+$users = mysqli_query($conn,$sql);
+foreach($users as $user) {
+    $FullName = test_input($user['name']);
+    $Email = test_input($user['email']);
+    $Role = test_input($user['role']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -397,7 +405,7 @@ require('connection.php');
                                             <img src="images/icon/avatar-01.jpg" alt="John Doe" />
                                         </div>
                                         <div class="content">
-                                            <a class="js-acc-btn" href="#">john doe</a>
+                                            <a class="js-acc-btn" href="#"><?php echo $FullName?></a>
                                         </div>
                                         <div class="account-dropdown js-dropdown">
                                             <div class="info clearfix">
@@ -408,9 +416,10 @@ require('connection.php');
                                                 </div>
                                                 <div class="content">
                                                     <h5 class="name">
-                                                        <a href="#">john doe</a>
+                                                        <a href="#"><?php echo $FullName?></a>
                                                     </h5>
-                                                    <span class="email">johndoe@example.com</span>
+                                                    <span class="email"><?php echo $Email?></span>
+                                                    <span class="name"><?php echo $Role?></span>
                                                 </div>
                                             </div>
                                             <div class="account-dropdown__body">

@@ -1,38 +1,28 @@
-<?php require('include/header.php');
+<?php 
+include('include/header.php');
+
 if(isset($_GET['ID'])) {
     $id = test_input($_GET['ID']);
     if(isset($_GET['Action']) && $_GET['Action'] == 'Delete') {
-        $del_sql = "DELETE FROM `cities` WHERE `id` = $id";
+        $del_sql = "DELETE FROM `roles` WHERE `id` = $id";
         $isDeleted = mysqli_query($conn,$del_sql);
         if($isDeleted) {
-            header("Location: cities.php");
+            header("Location: roles.php");
             exit;
         }
     }    
 }
 
-$sql = "SELECT * FROM `cities`";
-$cities = mysqli_query($conn, $sql);
-
-// echo "<pre>";
-// print_r($cities);
-// echo "</pre>";
-// pr($cities);
-
-// foreach ($cities as $city) {
-    // echo "<pre>";
-    // print_r($city);
-    // echo "</pre>";
-    // pr($city);
-// }
+$sql = "SELECT * FROM `users` JOIN `cities` ON `users`.`cityid` = `cities`.`id` JOIN `roles` ON `users`.`roleid` = `roles`.`id`";
+$users = mysqli_query($conn,$sql);
 ?>
 <!-- MAIN CONTENT-->
 <div class="main-content">
     <div class="section__content section__content--p30">
         <div class="container-fluid">
             <div class="row m-t-30">
-            <a href="addcity.php" type="button" class="btn btn-dark text-white">
-                <i class="fa fa-plus"></i>&nbsp; Add City
+            <a href="adduser.php" type="button" class="btn btn-dark text-white">
+                <i class="fa fa-plus"></i>&nbsp; Add User
             </a>
             </div>          
             <div class="row m-t-30">
@@ -44,17 +34,29 @@ $cities = mysqli_query($conn, $sql);
                                 <tr>
                                     <th>Sr. #</th>
                                     <th>ID</th>
-                                    <th>City Name</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Gender</th>
+                                    <th>Phone</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>Role</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php $srno = 1; foreach($cities as $city) {?>
+                                <?php $srno = 1; foreach($users as $user) {?>
                                 <tr>
                                     <td><?php echo $srno;?></td>
-                                    <td><?php echo $city['id'];?></td>
-                                    <td><?php echo $city['city'];?></td>
-                                    <td><a href="?ID=<?php echo $city['id'];?>&Action=Delete">Delete</a> | <a href="">Edit</a></td>
+                                    <td><?php echo $user['id'];?></td>
+                                    <td><?php echo $user['name'];?></td>
+                                    <td><?php echo $user['email'];?></td>
+                                    <td><?php echo $user['gender'];?></td>
+                                    <td><?php echo $user['phone'];?></td>
+                                    <td><?php echo $user['Address'];?></td>
+                                    <td><?php echo $user['city'];?></td>
+                                    <td><?php echo $user['role'];?></td>
+                                    <td><a href="?ID=<?php echo $user['id'];?>&Action=Delete">Delete</a> | <a href="">Edit</a></td>
                                 </tr>
                                 <?php $srno++; }?>    
                             </tbody>
@@ -73,4 +75,6 @@ $cities = mysqli_query($conn, $sql);
         </div>
     </div>
 </div>
-<?php require('include/footer.php'); ?>
+<?php
+include('include/footer.php');
+?>
