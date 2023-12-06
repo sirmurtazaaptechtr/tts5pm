@@ -1,6 +1,10 @@
 <?php 
 ob_start();
 require('connection.php');
+if($_SESSION['login'] != true) {
+    header('Location: index.php');
+    exit;
+}   
 $FullName = $Email = $Role = "";
 $sql = "SELECT * FROM `users` JOIN `roles` ON `users`.`roleid` = `roles`.`id` WHERE `users`.`id` = 1";
 $users = mysqli_query($conn,$sql);
@@ -73,17 +77,8 @@ foreach($users as $user) {
                                 <i class="fas fa-tachometer-alt"></i>Dashboard</a>
                             <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
                                 <li>
-                                    <a href="index.html">Dashboard 1</a>
-                                </li>
-                                <li>
-                                    <a href="index2.html">Dashboard 2</a>
-                                </li>
-                                <li>
-                                    <a href="index3.html">Dashboard 3</a>
-                                </li>
-                                <li>
-                                    <a href="index4.html">Dashboard 4</a>
-                                </li>
+                                    <a href="dashboard.php">Dashboard</a>
+                                </li>                                
                             </ul>
                         </li>
                         <li>
@@ -181,17 +176,8 @@ foreach($users as $user) {
                                 <i class="fas fa-tachometer-alt"></i>Dashboard</a>
                             <ul class="list-unstyled navbar__sub-list js-sub-list">
                                 <li>
-                                    <a href="index.html">Dashboard 1</a>
-                                </li>
-                                <li>
-                                    <a href="index2.html">Dashboard 2</a>
-                                </li>
-                                <li>
-                                    <a href="index3.html">Dashboard 3</a>
-                                </li>
-                                <li>
-                                    <a href="index4.html">Dashboard 4</a>
-                                </li>
+                                    <a href="dashboard.php">Dashboard</a>
+                                </li>                                
                             </ul>
                         </li>
                         <li>
@@ -437,7 +423,7 @@ foreach($users as $user) {
                                                 </div>
                                             </div>
                                             <div class="account-dropdown__footer">
-                                                <a href="#">
+                                                <a href="logout.php">
                                                     <i class="zmdi zmdi-power"></i>Logout</a>
                                             </div>
                                         </div>
