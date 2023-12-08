@@ -164,3 +164,4 @@
 
 </html>
 <!-- end document-->
+<?php mysqli_close($conn);?>
