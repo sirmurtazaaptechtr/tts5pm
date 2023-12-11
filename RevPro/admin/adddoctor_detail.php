@@ -1,6 +1,7 @@
 <?php include "include/header.php";
-$doctor_id = $specialization_id = "";
-$fileUploadErr = [];
+$doctor_id = $specialization_id = $hospital_id = "";
+$doctor_idErr = $specialization_idErr = $hospital_idErr = "";
+$fileUploadErr = $myData = [];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $target_dir = "images/doctors/";
@@ -12,10 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST["submit"])) {
         $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
         if ($check !== false) {
-            array_push(
-                $fileUploadErr,
-                "File is an image - " . $check["mime"] . "."
-            );
+            echo "File is an image - " . $check["mime"] . ".";
             $uploadOk = 1;
         } else {
             array_push($fileUploadErr, "File is not an image.");
@@ -30,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Check file size
-    if ($_FILES["fileToUpload"]["size"] > 500000) {
+    if ($_FILES["fileToUpload"]["size"] > 1500000) {
         array_push($fileUploadErr, "Sorry, your file is too large.");
         $uploadOk = 0;
     }
@@ -49,13 +47,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $uploadOk = 0;
     }
 
-    if (empty($_POST["doctor_detail_name"])) {
-        $doctor_detail_nameErr = "doctor_detail Name is required";
+    if (empty($_POST["doctor_id"]) || $_POST["doctor_id"] == 0) {
+        $doctor_idErr = "select doctor";
     } else {
-        $doctor_detail_name = test_input($_POST["doctor_detail_name"]);
+        $doctor_id = test_input($_POST["doctor_id"]);
     }
 
-    if (empty($fileUploadErr)) {
+    if (empty($_POST["specialization_id"]) || $_POST["specialization_id"] == 0) {
+        $specialization_idErr = "select specialization";
+    } else {
+        $specialization_id = test_input($_POST["specialization_id"]);
+    }
+
+    if (empty($_POST["hospital_id"]) || $_POST["hospital_id"] == 0) {
+        $hospital_idErr = "select hospital";
+    } else {
+        $hospital_id = test_input($_POST["hospital_id"]);
+    }
+
+    if (empty($fileUploadErr) && empty($specialization_idErr) && empty($hospital_idErr)) {
         // Check if $uploadOk is set to 0 by an error
         if ($uploadOk == 0) {
             array_push($fileUploadErr, "Sorry, your file was not uploaded.");
@@ -75,8 +85,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 echo "Sorry, there was an error uploading your file.";
             }
-        }
-        $sql = "INSERT INTO `doctor_details` (`doctor_detail`) VALUES ('$doctor_detail_name')";
+        }        
+        $sql = "INSERT INTO `doctor_details` (`photo`, `doctorid`, `spid`, `hospid`) VALUES ('$target_file','$doctor_id','$specialization_id','$hospital_id')";
         $isAdded = mysqli_query($conn, $sql);
         if ($isAdded) {
             header("Location: doctor_details.php");
@@ -84,11 +94,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
-
 ?>
 
 <!-- MAIN CONTENT-->
-<div class="main-content">
+<div class="main-content">    
     <div class="section__content section__content--p30">
         <div class="container-fluid">
             <div class="row">
@@ -177,19 +186,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
 <script>
-        $(document).ready(function () {
-            $("#doctor_id").change(function () {
-                var userId = $(this).val();
-                if (userId !== "") {
-                    // Fetch hospitals based on selected city
-                    $.get("get_hospitals.php", { userId: userId }, function (data) {
-                        $("#hospital_id").html(data).prop("disabled", false);
-                    });
-                } else {
-                    $("#hospital").html("<option value=''>Select Hospital</option>").prop("disabled", true);                    
-                }
-            });            
-        });
-    </script>
+    $(document).ready(function () {
+        $("#doctor_id").change(function () {
+            let docId = $(this).val();
+            if (docId !== "") {
+                // Fetch hospitals based on selected city
+                $.get("get_hospitals.php", { userId: docId }, function (options) {
+                    $("#hospital_id").html(options).prop("disabled", false);
+                });
+            } else {
+                $("#hospital").html("<option value=''>Select Hospital</option>").prop("disabled", true);                    
+            }
+        });            
+    });
+</script>
 
 <?php include('include/footer.php'); ?>

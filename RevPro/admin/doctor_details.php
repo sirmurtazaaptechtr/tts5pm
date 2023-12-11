@@ -69,7 +69,7 @@ $doctor_details = mysqli_query($conn, $sql);
                                 <tr>
                                     <td><?php echo $srno;?></td>
                                     <td><?php echo $doctor_detail['ddid'];?></td>
-                                    <td><?php echo $doctor_detail['photo'];?></td>
+                                    <td><img src="<?php echo $doctor_detail['photo'];?>" alt="<?php echo $doctor_detail['name'];?>"></td>
                                     <td><?php echo $doctor_detail['doctorid'];?></td>
                                     <td><?php echo $doctor_detail['name'];?></td>
                                     <td><?php echo $doctor_detail['gender'];?></td>
@@ -82,7 +82,7 @@ $doctor_details = mysqli_query($conn, $sql);
                                     <td><?php echo $doctor_detail['hospital_name'];?></td>
                                     <td><?php echo $doctor_detail['cityid'];?></td>
                                     <td><?php echo $doctor_detail['city'];?></td>
-                                    <td><a href="?ID=<?php echo $doctor_detail['ddid'];?>&Action=Delete">Delete</a> | <a href="">Edit</a></td>
+                                    <td><a href="?ID=<?php echo $doctor_detail['ddid'];?>&Action=Delete">Delete</a> | <a href="editdoctor_detail.php?ID=<?php echo $doctor_detail['ddid'];?>&Action=Edit">Edit</a></td>
                                 </tr>
                                 <?php $srno++; }?>    
                             </tbody>
