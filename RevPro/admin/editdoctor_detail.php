@@ -9,7 +9,7 @@ $fileUploadErr = $myData = [];
 if($_SERVER["REQUEST_METHOD"] == "GET") {
     $id = test_input($_GET['ID']);
     if(isset($_GET['Action']) && $_GET['Action'] == 'Edit') {
-        $get_sql = "SELECT *, `users`.`id` as id FROM `users` LEFT JOIN `doctor_details` ON `users`.`id` = `doctor_details`.`doctorid` WHERE `doctor_details`.`doctorid` = $id;";
+        $get_sql = "SELECT *, `users`.`id` as id FROM `users` LEFT JOIN `doctor_details` ON `users`.`id` = `doctor_details`.`doctorid` WHERE `doctor_details`.`id` = $id;";
         $doctor_detail = mysqli_query($conn,$get_sql);
         
         foreach($doctor_detail as $detail) {
@@ -244,6 +244,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         </select>
                                     </div>
                                 </div>                                
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label for="fileToUpload" class=" form-control-label">Photo</label>
+                                    </div>
+                                    <div class="col-12 col-md-9">
+                                        <img src="<?php echo $photo;?>" alt="">
+                                    </div>
+                                </div>                               
                                 <div class="row form-group">
                                     <div class="col col-md-3">
                                         <label for="fileToUpload" class=" form-control-label">Select Photo</label>
